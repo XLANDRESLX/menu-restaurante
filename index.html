@@ -1,1 +1,306 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Menú Digital</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+<style>
+
+:root{
+--primary:#ff6b00;
+--dark:#1a1a1a;
+--light:#ffffff;
+--gray:#f8f9fa;
+--glass:rgba(255,255,255,0.95);
+}
+
+*{
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+scroll-behavior:smooth;
+}
+
+body{
+font-family:'Outfit',sans-serif;
+background-color:var(--gray);
+margin:0;
+padding-bottom:110px;
+color:var(--dark);
+}
+
+header{
+background:linear-gradient(135deg,var(--primary),#e65c00);
+color:white;
+text-align:center;
+padding:50px 20px 70px;
+border-bottom-left-radius:50px;
+border-bottom-right-radius:50px;
+}
+
+.container{
+width:100%;
+max-width:600px;
+margin:-40px auto 0;
+padding:0 15px;
+}
+
+.contact-btn{
+display:inline-block;
+background:#25D366;
+color:white;
+padding:12px 25px;
+border-radius:30px;
+text-decoration:none;
+font-weight:600;
+margin-top:-30px;
+}
+
+.category-title{
+color:var(--dark);
+font-size:1.4rem;
+font-weight:700;
+margin:40px 0 15px;
+display:flex;
+align-items:center;
+gap:12px;
+text-transform:uppercase;
+}
+
+.category-title::after{
+content:"";
+flex:1;
+height:3px;
+background:var(--primary);
+border-radius:10px;
+opacity:0.3;
+}
+
+.menu-item{
+background:var(--light);
+padding:20px;
+border-radius:25px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+box-shadow:0 8px 20px rgba(0,0,0,0.03);
+}
+
+.item-info{
+flex:1;
+padding-right:15px;
+}
+
+.item-info h3{
+margin:0;
+font-size:1.15rem;
+}
+
+.item-info p{
+margin-top:6px;
+font-size:0.9rem;
+opacity:0.7;
+white-space:pre-line;
+}
+
+.item-price{
+background:#fff0e6;
+color:var(--primary);
+padding:10px 14px;
+border-radius:15px;
+font-weight:700;
+white-space:nowrap;
+}
+
+.bottom-nav{
+position:fixed;
+bottom:25px;
+left:50%;
+transform:translateX(-50%);
+width:92%;
+max-width:450px;
+background:var(--glass);
+backdrop-filter:blur(15px);
+padding:10px;
+border-radius:40px;
+box-shadow:0 15px 35px rgba(0,0,0,0.1);
+display:flex;
+overflow-x:auto;
+z-index:2000;
+border:1px solid rgba(255,255,255,0.6);
+}
+
+.bottom-nav::-webkit-scrollbar{
+display:none;
+}
+
+.nav-link{
+padding:12px 24px;
+margin:0 5px;
+color:var(--dark);
+text-decoration:none;
+border-radius:30px;
+font-size:0.9rem;
+font-weight:600;
+white-space:nowrap;
+}
+
+#loading{
+text-align:center;
+padding:60px;
+color:var(--primary);
+font-weight:600;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1 id="empresa">Cargando...</h1>
+<p id="lugar"></p>
+</header>
+
+<div style="text-align:center;">
+<a id="telefonoBtn" class="contact-btn" target="_blank">
+Contactar por WhatsApp
+</a>
+</div>
+
+<div class="container">
+
+<div id="loading">
+Conectando con Google Sheets...
+</div>
+
+<div id="menu-container"></div>
+
+</div>
+
+<nav class="bottom-nav" id="category-tabs"></nav>
+
+<script>
+
+const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQS1P9jB5HnKtkHZCeWtqlrPGeMWtgwAWIT4G6jux79_PMSdLf7v5_i7ZFz38TBiqv7lcsCmK1Edxu0/pub?output=csv";
+
+async function initMenu(){
+
+try{
+
+const response = await fetch(url);
+const csv = await response.text();
+
+const data = Papa.parse(csv,{
+header:true,
+skipEmptyLines:true
+});
+
+const rows = data.data;
+
+if(rows.length === 0) return;
+
+const info = rows[0];
+
+document.getElementById("empresa").textContent = info.Empresa || "Mi Restaurante";
+document.getElementById("lugar").textContent = "📍 " + (info.Lugar || "");
+
+const telefono = info.Telefono || "";
+
+if(telefono){
+document.getElementById("telefonoBtn").href =
+`https://wa.me/${telefono}`;
+}
+
+const menuGroups = {};
+
+rows.forEach((row,index)=>{
+
+const cat = row.Categoria || "General";
+
+if(!menuGroups[cat]){
+menuGroups[cat] = [];
+}
+
+menuGroups[cat].push({
+
+id:row.ID || index,
+nom:row.Nombre || "Producto",
+pre:parseInt(row.precio) || 0,
+dsc:row.Descripcion || ""
+
+});
+
+});
+
+renderHtml(menuGroups);
+
+}catch(err){
+
+console.error(err);
+
+document.getElementById("loading").innerHTML =
+"⚠️ Error cargando el menú.";
+
+}
+
+}
+
+function renderHtml(groups){
+
+const container = document.getElementById("menu-container");
+const tabs = document.getElementById("category-tabs");
+
+container.innerHTML="";
+tabs.innerHTML="";
+
+document.getElementById("loading").style.display="none";
+
+for(const catName in groups){
+
+const sectionId = catName.toLowerCase().replace(/\s+/g,'-');
+
+tabs.innerHTML += `<a href="#${sectionId}" class="nav-link">${catName}</a>`;
+
+let section = `<section id="${sectionId}">
+<h2 class="category-title">${catName}</h2>`;
+
+groups[catName].forEach(p=>{
+
+const precioFmt = new Intl.NumberFormat('es-CO',{
+style:'currency',
+currency:'COP',
+maximumFractionDigits:0
+}).format(p.pre);
+
+section += `
+<div class="menu-item">
+<div class="item-info">
+<h3>${p.nom}</h3>
+<p>${p.dsc}</p>
+</div>
+<div class="item-price">${precioFmt}</div>
+</div>
+`;
+
+});
+
+container.innerHTML += section + "</section>";
+
+}
+
+}
+
+window.onload = initMenu;
+
+</script>
+
+</body>
+</html>
+```

@@ -218,6 +218,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--surface);margin:0;padding
 <div id="toast"></div>
 
 <script>
+// ==========================================
+// CONFIGURACIÓN MANUAL: CAMBIA EL NOMBRE AQUÍ
+// ==========================================
+const NOMBRE_EMPRESA_CONFIG = "COMIDA RAPIDA ANDRES";
+  
 const SHEET_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQS1P9jB5HnKtkHZCeWtqlrPGeMWtgwAWIT4G6jux79_PMSdLf7v5_i7ZFz38TBiqv7lcsCmK1Edxu0/pub?output=csv";
 
 const EMOJI={salchipapa:'🍟',pizza:'🍕',hamburguesa:'🍔','perro caliente':'🌭',mazorcada:'🌽',patacon:'🫓','arepa rellena':'🫔',bebidas:'🥤',default:'🍽️'};
@@ -343,36 +348,52 @@ function clearSearch(){document.getElementById('search-input').value='';document
 function eh(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function ej(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
 
-async function init(){
-  try{
-    const res=await fetch(SHEET_URL);
-    const csv=await res.text();
-    const rows=Papa.parse(csv,{header:true,skipEmptyLines:true}).data;
-    if(!rows.length)return;
-    const info=rows[0];
-    document.getElementById('empresa').textContent=info.Empresa||'Mi Restaurante';
-    document.getElementById('lugar').textContent='📍 '+(info.Lugar||'');
-    document.title=info.Empresa||'Menú Digital';
-    phone=(info.Telefono||'').replace(/\D/g,'');
-    if(phone)document.getElementById('telefonoBtn').href='https://wa.me/'+phone;
-    const groups={};
-    rows.forEach((row,idx)=>{
-      const cat=(row.Categoria||'General').trim();
-      if(!groups[cat])groups[cat]=[];
+async function init() {
+  try {
+    const res = await fetch(SHEET_URL);
+    const csv = await res.text();
+    const allRows = Papa.parse(csv, { header: true, skipEmptyLines: true }).data;
+
+    if (!allRows.length) return;
+
+    // FILTRO MANUAL: Usa la variable que definiste arriba
+    const rows = allRows.filter(r => 
+      r.Empresa && r.Empresa.trim().toLowerCase() === NOMBRE_EMPRESA_CONFIG.trim().toLowerCase()
+    );
+
+    if (rows.length === 0) {
+      document.getElementById('loading').innerHTML = `⚠️ No se encontraron productos para: <strong>${NOMBRE_EMPRESA_CONFIG}</strong>`;
+      return;
+    }
+
+    // Usamos los datos de la primera fila encontrada para el encabezado
+    const info = rows[0];
+    document.getElementById('empresa').textContent = info.Empresa || NOMBRE_EMPRESA_CONFIG;
+    document.getElementById('lugar').textContent = '📍 ' + (info.Lugar || '');
+    document.title = info.Empresa || NOMBRE_EMPRESA_CONFIG;
+    
+    phone = (info.Telefono || '').replace(/\D/g, '');
+    if (phone) document.getElementById('telefonoBtn').href = 'https://wa.me/' + phone;
+
+    const groups = {};
+    rows.forEach((row, idx) => {
+      const cat = (row.Categoria || 'General').trim();
+      if (!groups[cat]) groups[cat] = [];
       groups[cat].push({
-        id:String(row.ID||idx),
-        name:(row.Nombre||'Producto').trim(),
-        price:parseInt(row.precio)||0,
-        desc:(row.Descripcion||'').trim(),
-        image:(row.Imagen||'').trim(),
-        available:(row.Disponible||'S').trim().toUpperCase()!=='N'
+        id: String(row.ID || idx),
+        name: (row.Nombre || 'Producto').trim(),
+        price: parseInt(row.precio) || 0,
+        desc: (row.Descripcion || '').trim(),
+        image: (row.Imagen || '').trim(),
+        available: (row.Disponible || 'S').trim().toUpperCase() !== 'N'
       });
     });
+
     renderMenu(groups);
     updateFab();
-  }catch(e){
+  } catch (e) {
     console.error(e);
-    document.getElementById('loading').innerHTML='⚠️ Error al cargar el menú. Recarga la página.';
+    document.getElementById('loading').innerHTML = '⚠️ Error al cargar el menú.';
   }
 }
 

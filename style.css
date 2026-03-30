@@ -1,0 +1,367 @@
+:root {
+  --bg: #0f0f0f;
+  --surface: #1a1a1a;
+  --card: #222222;
+  --accent: #f5a623;
+  --accent2: #e8441a;
+  --text: #f0ece4;
+  --muted: #888;
+  --nav-h: 72px;
+  --radius: 20px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: calc(var(--nav-h) + 20px);
+}
+
+/* ── PORTADA ── */
+#portada {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  padding: 40px 20px 100px;
+}
+#portada::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 60% 30%, #e8441a33 0%, transparent 60%),
+              radial-gradient(ellipse at 30% 80%, #f5a62322 0%, transparent 55%);
+  z-index: 0;
+}
+.cover-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 10vw, 7rem);
+  line-height: 1;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative; z-index: 1;
+  text-shadow: none;
+  filter: drop-shadow(0 4px 24px #f5a62355);
+  animation: fadeUp .8s ease both;
+}
+.cover-sub {
+  font-size: clamp(.9rem, 3vw, 1.2rem);
+  color: var(--muted);
+  margin-top: 8px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  position: relative; z-index: 1;
+  animation: fadeUp .8s .15s ease both;
+}
+.cover-divider {
+  width: 60px; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 2px;
+  margin: 24px auto;
+  position: relative; z-index: 1;
+  animation: fadeUp .8s .25s ease both;
+}
+.cover-info {
+  position: relative; z-index: 1;
+  animation: fadeUp .8s .35s ease both;
+  display: flex; flex-direction: column; gap: 10px; align-items: center;
+  width: 100%;
+}
+.cover-lugar {
+  font-size: .95rem; color: var(--muted);
+  display: flex; align-items: center; gap: 6px;
+}
+.wa-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  background: #25D366;
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  padding: 14px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  margin-top: 10px;
+  box-shadow: 0 8px 32px #25d36640;
+  transition: transform .2s, box-shadow .2s;
+  max-width: 90vw; /* Evita que se salga en celulares */
+}
+.wa-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px #25d36660; }
+.wa-icon { width: 22px; height: 22px; }
+.cover-scroll {
+  position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%);
+  color: var(--muted); font-size: .8rem; letter-spacing: 2px;
+  text-transform: uppercase; z-index: 1;
+  animation: bounce 2s infinite;
+}
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── LOADING ── */
+#loading {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 16px; padding: 60px 20px;
+  min-height: 40vh;
+}
+.spinner {
+  width: 48px; height: 48px;
+  border: 4px solid #333;
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to{transform:rotate(360deg)} }
+
+/* ── MENÚ ── */
+#menu { padding: 32px 16px 20px; max-width: 900px; margin: 0 auto; }
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem; letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 20px;
+  padding-left: 12px;
+  border-left: 4px solid var(--accent2);
+}
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.product-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid #2a2a2a;
+  transition: transform .2s, box-shadow .2s;
+  display: flex; flex-direction: column;
+}
+.product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px #0006; }
+.product-img {
+  width: 100%; height: 160px; object-fit: cover;
+  background: #1e1e1e;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem; color: #333;
+}
+.product-img img { width: 100%; height: 100%; object-fit: cover; }
+.product-body { padding: 14px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.product-name {
+  font-weight: 800; font-size: 1rem; text-transform: capitalize;
+  color: var(--text);
+}
+.product-desc { font-size: .82rem; color: var(--muted); line-height: 1.5; flex: 1; }
+.product-footer { 
+  display: flex; align-items: center; justify-content: space-between; 
+  margin-top: 10px; 
+  gap: 8px; /* Espacio extra si se juntan mucho */
+  flex-wrap: wrap; /* Permite que el botón baje si no cabe */
+}
+.product-price {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem; letter-spacing: 1px;
+  color: var(--accent);
+}
+.add-btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none; border-radius: 50px;
+  color: #fff; font-weight: 800; font-size: .85rem;
+  padding: 8px 16px; cursor: pointer;
+  transition: opacity .2s, transform .2s;
+  touch-action: manipulation; /* Mejora el toque en pantallas táctiles */
+}
+.add-btn:hover { opacity: .85; transform: scale(1.05); }
+
+/* ── NAVBAR BOTTOM ── */
+#navbar {
+  position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 4px;
+  background: #1a1a1aee;
+  backdrop-filter: blur(16px);
+  border-radius: 50px;
+  padding: 8px;
+  border: 1px solid #2a2a2a;
+  z-index: 100;
+  max-width: calc(100vw - 32px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  box-shadow: 0 8px 40px #000a;
+}
+#navbar::-webkit-scrollbar { display: none; }
+.nav-item {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-weight: 700; font-size: .82rem;
+  cursor: pointer;
+  color: var(--muted);
+  transition: background .2s, color .2s;
+  white-space: nowrap;
+  border: none; background: transparent;
+  touch-action: manipulation;
+}
+.nav-item.active, .nav-item:hover {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+}
+.nav-cart-btn {
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-weight: 800; font-size: .82rem;
+  cursor: pointer;
+  background: #25D366;
+  color: #fff;
+  border: none;
+  position: relative;
+  transition: opacity .2s;
+  touch-action: manipulation;
+}
+.nav-cart-btn:hover { opacity: .85; }
+.cart-badge {
+  position: absolute; top: 2px; right: 4px;
+  background: #e8441a; color: #fff;
+  border-radius: 50%; width: 18px; height: 18px;
+  font-size: .7rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  display: none;
+}
+
+/* ── CARRITO MODAL ── */
+#cart-overlay {
+  position: fixed; inset: 0;
+  background: #000c;
+  z-index: 200;
+  display: none;
+  align-items: flex-end;
+}
+#cart-overlay.open { display: flex; }
+#cart-panel {
+  width: 100%; max-width: 540px;
+  margin: 0 auto;
+  background: var(--surface);
+  border-radius: 28px 28px 0 0;
+  padding: 24px 20px 32px;
+  max-height: 90svh;
+  overflow-y: auto;
+  animation: slideUp .3s ease;
+}
+@keyframes slideUp { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
+.cart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.cart-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 2px; color: var(--accent); }
+.close-btn {
+  background: #2a2a2a; border: none; color: var(--text);
+  width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  touch-action: manipulation;
+}
+.cart-items { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+.cart-item {
+  background: var(--card);
+  border-radius: 14px; padding: 12px;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.cart-item-info { flex: 1; }
+.cart-item-name { font-weight: 800; font-size: .95rem; text-transform: capitalize; }
+.cart-item-note { font-size: .78rem; color: var(--muted); margin-top: 2px; font-style: italic; }
+.cart-item-price { color: var(--accent); font-weight: 800; font-size: .95rem; white-space: nowrap; }
+.cart-item-controls { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.qty-btn {
+  background: #333; border: none; color: var(--text);
+  width: 28px; height: 28px; border-radius: 50%; font-size: 1rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+  touch-action: manipulation;
+}
+.qty-btn:hover { background: var(--accent); }
+.qty-val { font-weight: 800; min-width: 20px; text-align: center; }
+.cart-item-note-input {
+  width: 100%; margin-top: 8px;
+  background: #1a1a1a; border: 1px solid #333; border-radius: 8px;
+  padding: 6px 10px; color: var(--text); font-size: .8rem; font-family: 'Nunito', sans-serif;
+}
+.cart-item-note-input::placeholder { color: #555; }
+.remove-btn {
+  background: none; border: none; color: #e8441a; cursor: pointer; font-size: 1.1rem;
+  padding: 2px 6px; touch-action: manipulation;
+}
+
+/* Formulario pedido */
+.form-section { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+.form-label { font-weight: 700; font-size: .85rem; color: var(--muted); margin-bottom: 4px; display: block; }
+.form-input, .form-select {
+  width: 100%; padding: 12px 14px;
+  background: var(--card); border: 1px solid #333; border-radius: 12px;
+  color: var(--text); font-family: 'Nunito', sans-serif; font-size: .95rem;
+  outline: none; transition: border .2s;
+}
+.form-input:focus, .form-select:focus { border-color: var(--accent); }
+.form-select option { background: var(--card); }
+.cart-total {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 0; border-top: 1px solid #2a2a2a; margin-top: 8px;
+}
+.total-label { font-weight: 700; color: var(--muted); }
+.total-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--accent); }
+.send-btn {
+  width: 100%; padding: 16px;
+  background: #25D366;
+  border: none; border-radius: 50px;
+  color: #fff; font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem; letter-spacing: 2px;
+  cursor: pointer; margin-top: 8px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  transition: opacity .2s, transform .2s;
+  touch-action: manipulation;
+}
+.send-btn:hover { opacity: .9; transform: scale(1.01); }
+.empty-cart { text-align: center; padding: 40px 20px; color: var(--muted); }
+.empty-cart .emoji { font-size: 3rem; display: block; margin-bottom: 12px; }
+
+/* toast */
+#toast {
+  position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: #0f0f0f;
+  padding: 10px 24px; border-radius: 50px;
+  font-weight: 800; font-size: .9rem;
+  z-index: 300; opacity: 0; pointer-events: none;
+  transition: opacity .3s;
+}
+#toast.show { opacity: 1; }
+
+/* ── MEJORAS MÓVILES (BOTONES Y CARDS) ── */
+@media(max-width:480px) {
+  .products-grid { grid-template-columns: 1fr 1fr; }
+  .product-img { height: 120px; }
+  
+  /* Botón de WhatsApp más natural y adaptado al espacio */
+  .wa-btn { padding: 12px 20px; font-size: 0.95rem; width: 100%; }
+  
+  /* Ajuste al botón "Agregar" para que no se vea desproporcionado */
+  .add-btn { 
+    padding: 10px 14px; 
+    font-size: 0.8rem; 
+    flex: 1; /* Ocupa el espacio restante bien repartido */
+    text-align: center; 
+  }
+  
+  /* La barra de abajo un poco más compacta en alto */
+  .nav-item { padding: 8px 12px; font-size: 0.8rem; }
+  .nav-cart-btn { padding: 8px 12px; font-size: 0.8rem; }
+}
+
+@media(max-width:340px) {
+  .products-grid { grid-template-columns: 1fr; }
+  /* En pantallas súper pequeñas aseguramos que el flex no colapse el botón con el precio */
+  .product-footer { flex-direction: column; align-items: flex-start; }
+  .add-btn { width: 100%; }
+}

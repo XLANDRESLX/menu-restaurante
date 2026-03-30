@@ -1,53 +1,143 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Carta Digital</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Menú Digital - Andrés</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<style>
+:root{ --primary:#ff6b00; --dark:#1a1a1a; --light:#ffffff; --gray:#f8f9fa; --glass:rgba(255,255,255,0.95); }
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; scroll-behavior:smooth; }
+body{ font-family:'Outfit',sans-serif; background-color:var(--gray); margin:0; padding-bottom:110px; color:var(--dark); }
+header{ background:linear-gradient(135deg,var(--primary),#e65c00); color:white; text-align:center; padding:50px 20px 70px; border-bottom-left-radius:50px; border-bottom-right-radius:50px; }
+.container{ width:100%; max-width:600px; margin:-40px auto 0; padding:0 15px; }
+.contact-btn{ display:inline-block; background:#25D366; color:white; padding:12px 25px; border-radius:30px; text-decoration:none; font-weight:600; margin-top:-30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.category-title{ color:var(--dark); font-size:1.4rem; font-weight:700; margin:40px 0 15px; display:flex; align-items:center; gap:12px; text-transform:uppercase; }
+.category-title::after{ content:""; flex:1; height:3px; background:var(--primary); border-radius:10px; opacity:0.3; }
+.menu-item{ background:var(--light); padding:20px; border-radius:25px; display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; box-shadow:0 8px 20px rgba(0,0,0,0.03); }
+.item-info{ flex:1; padding-right:15px; }
+.item-info h3{ margin:0; font-size:1.15rem; text-transform: capitalize; }
+.item-info p{ margin:6px 0 0; font-size:0.9rem; opacity:0.7; white-space:pre-line; line-height: 1.4; }
+.item-price{ background:#fff0e6; color:var(--primary); padding:10px 14px; border-radius:15px; font-weight:700; white-space:nowrap; }
+.bottom-nav{ position:fixed; bottom:25px; left:50%; transform:translateX(-50%); width:92%; max-width:450px; background:var(--glass); backdrop-filter:blur(15px); padding:10px; border-radius:40px; box-shadow:0 15px 35px rgba(0,0,0,0.1); display:flex; overflow-x:auto; z-index:2000; border:1px solid rgba(255,255,255,0.6); }
+.bottom-nav::-webkit-scrollbar{ display:none; }
+.nav-link{ padding:12px 24px; margin:0 5px; color:var(--dark); text-decoration:none; border-radius:30px; font-size:0.9rem; font-weight:600; white-space:nowrap; transition: background 0.3s; }
+.nav-link:active{ background: var(--primary); color: white; }
+#loading{ text-align:center; padding:60px; color:var(--primary); font-weight:600; }
+</style>
 </head>
 <body>
 
-<section id="portada">
-  <div class="cover-logo" id="cover-nombre">Cargando...</div>
-  <div class="cover-sub">Carta Digital</div>
-  <div class="cover-divider"></div>
-  <div class="cover-info">
-    <div class="cover-lugar" id="cover-lugar">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      <span id="lugar-txt"></span>
-    </div>
-    <a href="#" id="wa-link" class="wa-btn" target="_blank">
-      <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.526 5.845L.057 23.619a.75.75 0 00.908.928l5.938-1.553A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.73 9.73 0 01-4.953-1.352l-.355-.21-3.676.961.981-3.584-.231-.369A9.722 9.722 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
-      Pedir por WhatsApp
-    </a>
-  </div>
-  <div class="cover-scroll">↓ ver menú</div>
-</section>
+<header>
+    <h1 id="empresa">Cargando...</h1>
+    <p id="lugar"></p>
+</header>
 
-<div id="loading">
-  <div class="spinner"></div>
-  <span style="color:var(--muted)">Cargando carta...</span>
+<div style="text-align:center;">
+    <a id="telefonoBtn" class="contact-btn" href="#" target="_blank">Contactar por WhatsApp</a>
 </div>
 
-<div id="menu" style="display:none"></div>
-
-<nav id="navbar" style="display:none"></nav>
-
-<div id="cart-overlay">
-  <div id="cart-panel">
-    <div class="cart-header">
-      <span class="cart-title">🛒 Tu Pedido</span>
-      <button class="close-btn" onclick="closeCart()">✕</button>
-    </div>
-    <div id="cart-content"></div>
-  </div>
+<div class="container">
+    <div id="loading">Cargando el menú de hoy...</div>
+    <div id="menu-container"></div>
 </div>
 
-<div id="toast"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-<script src="app.js"></script>
+<nav class="bottom-nav" id="category-tabs"></nav>
 
+<script>
+const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQS1P9jB5HnKtkHZCeWtqlrPGeMWtgwAWIT4G6jux79_PMSdLf7v5_i7ZFz38TBiqv7lcsCmK1Edxu0/pub?output=csv";
+const MI_EMPRESA = "COMIDA RAPIDA ANDRES";
+
+async function initMenu(){
+    try {
+        const response = await fetch(url);
+        const csv = await response.text();
+        const data = Papa.parse(csv, { header: true, skipEmptyLines: true });
+        const rows = data.data;
+
+        if(rows.length === 0) return;
+
+        const menuGroups = {};
+        let datosEmpresaCargados = false;
+
+        rows.forEach((row, index) => {
+            // Filtrar estrictamente por el nombre de tu empresa
+            const nombreFila = (row.Empresa || "").trim().toUpperCase();
+            if (nombreFila !== MI_EMPRESA) return;
+
+            // CAPTURA ÚNICA: Solo de la primera fila que encuentre de la empresa
+            if (!datosEmpresaCargados) {
+                document.getElementById("empresa").textContent = row.Empresa;
+                document.getElementById("lugar").textContent = "📍 " + (row.Lugar || "Ciénaga");
+                
+                const tel = (row.Telefono || "").toString().replace(/\D/g, '');
+                if (tel) {
+                    // Si el teléfono no tiene el código de país 57, se lo ponemos
+                    const linkTel = tel.startsWith('57') ? tel : '57' + tel;
+                    document.getElementById("telefonoBtn").href = `https://wa.me/${linkTel}`;
+                }
+                datosEmpresaCargados = true;
+            }
+
+            // AGRUPAR PRODUCTOS
+            const cat = row.Categoria || "General";
+            if(!menuGroups[cat]) menuGroups[cat] = [];
+
+            menuGroups[cat].push({
+                nom: row.Nombre || "Producto",
+                pre: parseInt((row.precio || "0").toString().replace(/\D/g, '')) || 0,
+                dsc: row.Descripcion || ""
+            });
+        });
+
+        if (Object.keys(menuGroups).length === 0) {
+            document.getElementById("loading").innerHTML = "No se encontraron productos para esta empresa.";
+            return;
+        }
+
+        renderHtml(menuGroups);
+
+    } catch(err) {
+        console.error(err);
+        document.getElementById("loading").innerHTML = "⚠️ Error conectando con la lista.";
+    }
+}
+
+function renderHtml(groups){
+    const container = document.getElementById("menu-container");
+    const tabs = document.getElementById("category-tabs");
+    const formatter = new Intl.NumberFormat('es-CO', { style:'currency', currency:'COP', maximumFractionDigits:0 });
+
+    container.innerHTML = "";
+    tabs.innerHTML = "";
+    document.getElementById("loading").style.display = "none";
+
+    for(const catName in groups){
+        const sectionId = catName.toLowerCase().replace(/\s+/g,'-');
+        
+        // Agregar botón a la navegación inferior
+        tabs.innerHTML += `<a href="#${sectionId}" class="nav-link">${catName}</a>`;
+
+        // Crear sección de productos
+        let section = `<section id="${sectionId}"><h2 class="category-title">${catName}</h2>`;
+        
+        groups[catName].forEach(p => {
+            section += `
+                <div class="menu-item">
+                    <div class="item-info">
+                        <h3>${p.nom}</h3>
+                        <p>${p.dsc}</p>
+                    </div>
+                    <div class="item-price">${formatter.format(p.pre)}</div>
+                </div>
+            `;
+        });
+        container.innerHTML += section + "</section>";
+    }
+}
+
+window.onload = initMenu;
+</script>
 </body>
 </html>
